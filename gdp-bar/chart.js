@@ -1,6 +1,7 @@
 //main tutorials used:
 //https://www.pshrmn.com/tutorials/d3/bar-charts/
 //https://bl.ocks.org/d3noob/257c360b3650b9f0a52dd8257d7a2d73
+//displays US GDP over time as a bar chart, with details in a tooltip
 d3.json("https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/GDP-data.json", function(response) {
   var data = response.data;
 
