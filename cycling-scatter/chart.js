@@ -54,45 +54,47 @@ var data = [{
   }];
 
 
-var margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+  var margin = {top: 20, right: 20, bottom: 30, left: 50},
+      width = 960 - margin.left - margin.right,
+      height = 500 - margin.top - margin.bottom;
 
 
-// set the ranges
-var parseTime = d3.timeParse("%H:%M");
-var times = data.map(function(d) {
-  d.Time = parseTime(d.Time);
-  return d.Time;
-  })
-var x = d3.scaleTime().range([0, width]);
-var y = d3.scaleLinear().range([height, 0]);
+  // set the ranges
+  var parseTime = d3.timeParse("%M:%S");
+  var times = data.map(function(d) {
+    d.Time = parseTime(d.Time);
+    return d.Time;
+    })
+  var x = d3.scaleTime().range([0, width]);
+  var y = d3.scaleLinear().range([height, 0]);
 
-var svg = d3.select(".chart").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
-
-
-  // Scale the range of the data
-  x.domain(d3.extent(data, function(d) { return d.Time; }));
-  y.domain([0, d3.max(data, function(d) { return d.Place; })]);
+  var svg = d3.select(".chart").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
 
 
-  svg.selectAll("dot")
-      .data(data)
-    .enter().append("circle")
-      .attr("r", 5)
-      .attr("cx", function(d) { return x(d.Time); })
-      .attr("cy", function(d) { return y(d.Place); });
+    // Scale the range of the data
+    x.domain(d3.extent(data, function(d) { return d.Time; }));
+    y.domain([d3.max(data, function(d) { return d.Place; }),0]);
 
-  // Add the X Axis
-  svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
 
-  // Add the Y Axis
-  svg.append("g")
-      .call(d3.axisLeft(y));
+    svg.selectAll("dot")
+        .data(data)
+        .enter().append("circle")
+        .attr("r", 5)
+        .attr("cx", function(d) { return x(d.Time); })
+        .attr("cy", function(d) { return y(d.Place); });
+
+    // Add the X Axis
+    var xAxis = d3.axisBottom(x)
+        .tickFormat(d3.timeFormat("%M:%S"));
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    // Add the Y Axis
+    svg.append("g")
+        .call(d3.axisLeft(y));
