@@ -8,36 +8,54 @@ body {
 div.tooltip {
   position: absolute;
   text-align: left;
-  width: 220px;
-  height: 120px;
+  width: 200px;
+  height: 70px;
   padding: 10px;
   font-size: 14px;
   font-weight: bold;
-  background: #e49a97;
+  background: #c1d6b7;
   border: 0px;
   border-radius: 8px;
   pointer-events: none;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -60px;
-}
-
-text {
-  font-weight: bold;
-}
-
-.circle {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  margin: 0 auto;
-  display:inline-block;
-}
-
-.key {
-  display:inline-block;
+  top: -35%;
+  left: 135%;
+  transform: translateX(10%);
+  margin-top: -10px;
 }
 
 a {
   text-decoration: none;
+}
+
+.chart {
+  margin-bottom: 20px;
+}
+
+.key {
+  text-align: left;
+  margin-left: 30%;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.color {
+  padding: 5px;
+  border-radius: 2px;
+  margin-right: 10px;
+}
+
+#q1color {
+  background: #bdb7d6;
+}
+
+#q2color {
+  background: #948DB3;
+}
+
+#q3color {
+  background: #605885;
+}
+
+#q4color {
+  background: #433B67;
 }

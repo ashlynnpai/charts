@@ -5,6 +5,18 @@ d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/unis/data.js
   var data = response;
 
   var states = d3.set(data.map(function(d) { return d.state; } )).values();
+  var tuition = d3.set(data.map(function(d) { return d.tuition; } )).values();
+  tuition.sort(function(a,b){return a - b})
+
+  var q1 = d3.quantile(tuition, .25);
+  var q2 = d3.quantile(tuition, .5);
+  var q3 = d3.quantile(tuition, .75);
+  var q4 = d3.quantile(tuition, 1);
+  d3.select("#q1").node().innerHTML = "$0 - $" + q1;
+  d3.select("#q2").node().innerHTML = "$" + q1 + " - $" + q2 ;
+  d3.select("#q3").node().innerHTML = "$" + q2 + " - $" + q3 ;
+  d3.select("#q4").node().innerHTML = "$" + q3 + " - $" + q4 ;
+
 
   var cellSize = 20;
   var numYears = 11;
@@ -46,6 +58,7 @@ d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/unis/data.js
   var color = d3.scaleQuantize()
       .domain(d3.extent(data, function(d) { return d.tuition; }))
       .range(["#bdb7d6", "#948DB3", "#605885", "#433B67"]);
+  console.log(color.domain)
 
   svg.selectAll("rect")
       .data(data)
@@ -58,20 +71,19 @@ d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/unis/data.js
       //set colors based on tuition
       .attr('fill', function(d) { return color(d.tuition); })
       .style("stroke", "#d6cdb7")
-      // .on("mouseover", function(d) {
-      //     div.transition()
-      //      .duration(200)
-      //      .style("opacity", .9);
-      //     div.html(
-      //      )
-      //      .style("left", (d3.event.pageX) + "px")
-      //      .style("top", (d3.event.pageY - 28) + "px");
-      //    })
-      // .on("mouseout", function(d) {
-      //     div.transition()
-      //       .duration(500)
-      //       .style("opacity", 0)
-      //  });
+      .on("mouseover", function(d) {
+          div.transition()
+           .duration(200)
+           .style("opacity", .9);
+          div.html(d.uni + "<br/>$" + d.tuition)
+           .style("left", (d3.event.pageX) + "px")
+           .style("top", (d3.event.pageY - 28) + "px");
+         })
+      .on("mouseout", function(d) {
+          div.transition()
+            .duration(500)
+            .style("opacity", 0)
+       });
 
   var xAxis = d3.axisBottom(x);
   var yAxis = d3.axisLeft(y)
