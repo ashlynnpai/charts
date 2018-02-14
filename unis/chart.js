@@ -19,8 +19,12 @@ d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/unis/data.js
     .attr("class", "tooltip")
     .style("opacity", 0);
 
+  var parseTime = d3.timeParse("%Y");
   var formatTime = d3.timeFormat("%Y");
-
+  var years = data.map(function(d) {
+      d.year = parseTime(d.year);
+      return d.year;
+      })
 
 
   var x = d3.scaleBand()
@@ -70,7 +74,8 @@ d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/unis/data.js
       //  });
 
   var xAxis = d3.axisBottom(x);
-  var yAxis = d3.axisLeft(y);
+  var yAxis = d3.axisLeft(y)
+  .tickFormat(d3.timeFormat("%Y"));
 
   svg.append('g')
     .classed('x axis', true)
@@ -80,12 +85,4 @@ d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/unis/data.js
   svg.append('g')
     .classed('y axis', true)
     .call(yAxis);
-
-  svg.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0 - margin.left)
-      .attr("x",0 - (height / 2))
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
-      .text("Something");
 });
