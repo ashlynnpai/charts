@@ -3,6 +3,7 @@
 
 d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/tuition-heatmap/data.json", function(response) {
     var data = response;
+  console.log(data);
 
 //set up chart dimensions
     var cellSize = 20;
@@ -24,7 +25,7 @@ d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/tuition-heat
     //convert time to and from string
     var parseTime = d3.timeParse("%Y");
     var formatTime = d3.timeFormat("%Y");
-    const years = data.map((d) => {return parseTime(d.year)});
+    const years = data.map((d) => {parseTime(d.year)});
 
     //set the values of x and y axes
     const states = d3.set(data.map((d) => {return d.state})).values();
@@ -43,18 +44,18 @@ d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/tuition-heat
         .enter().append("rect")
         .attr('width', cellSize)
         .attr('height', cellSize)
-        .attr('x', function(d) { return x(d.state); })
+        .attr('x', d => x(d.state))
         //put the cells on top of the y increments to prevent x-axis labels overlapping
-        .attr('y', function(d) { return y(d.year) - cellSize; })
+        .attr('y', d => y(d.year) - cellSize)
         //set colors based on tuition
-        .attr('fill', function(d) { return color(d.tuition); })
+        .attr('fill', d => color(d.tuition))
         .style("stroke", "#d6cdb7")
         //tooltips
         .on("mouseover", function(d) {
-        div.transition()
+            div.transition()
             .duration(200)
             .style("opacity", .9);
-        div.html(d.uni + "<br/>$" + d.tuition)
+            div.html(d.uni + "<br/>$" + d.tuition)
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY - 28) + "px");
         })
