@@ -1,7 +1,7 @@
 //data from https://trends.collegeboard.org/college-pricing/figures-tables/tuition-fees-flagship-universities-over-time
 //heat map showing tuition increases over ten years 2017 adjusted dollars
 
-d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/unis/data.json", function(response) {
+d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/tuition-heatmap/data.json", function(response) {
     var data = response;
 
 //set up chart dimensions
