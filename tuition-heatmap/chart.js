@@ -5,8 +5,8 @@ d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/tuition-heat
     var data = response;
 
 //set up chart dimensions
-    var cellSize = 20;
-    var numYears = 11;
+    const cellSize = 20;
+    const numYears = 11;
     const margin = {top: 30, right: 0, bottom: 30, left: 50},
         width = 1000 - margin.left - margin.right,
         height = cellSize * numYears - 10;
@@ -62,7 +62,7 @@ d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/tuition-heat
             div.transition()
             .duration(500)
             .style("opacity", 0)
-    });
+        });
 
     //draws the axes
     var xAxis = d3.axisBottom(x);
