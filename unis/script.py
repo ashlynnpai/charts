@@ -7,13 +7,15 @@ infodict = {}
 
 for row in range(4, 54):
     num = 67
-    infodict["uni"] = str(sheet['A' + str(row)].value)
-    infodict["state"] = str(sheet['B' + str(row)].value)
     for i in range(2007,2018):
-        infodict[i] = int(sheet[chr(num) + str(row)].value)
+        infodict["uni"] = str(sheet['A' + str(row)].value)
+        infodict["state"] = str(sheet['B' + str(row)].value)
+        infodict["year"] = i
+        infodict["tuition"] = int(sheet[chr(num) + str(row)].value)
+        #infodict[i] = int(sheet[chr(num) + str(row)].value)
         num += 1
-    infolist.append(infodict)
-    infodict = {}
+        infolist.append(infodict)
+        infodict = {}
 
 print infolist
 
