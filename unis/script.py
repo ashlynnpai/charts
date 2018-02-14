@@ -1,4 +1,5 @@
 import openpyxl
+import json
 wb = openpyxl.load_workbook('unis.xlsx')
 sheet = wb.worksheets[0]
 year = 2007
@@ -17,5 +18,5 @@ for row in range(4, 54):
         infolist.append(infodict)
         infodict = {}
 
-print infolist
+print json.dumps(infolist)
 
