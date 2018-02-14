@@ -3,7 +3,6 @@
 
 d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/tuition-heatmap/data.json", function(response) {
     var data = response;
-  console.log(data);
 
 //set up chart dimensions
     var cellSize = 20;
