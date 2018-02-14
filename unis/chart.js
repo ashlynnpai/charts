@@ -3,9 +3,17 @@
 
 d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/unis/data.json", function(response) {
   var data = response;
+
+  var states = d3.set(data.map(function(d) { return d.state; } )).values();
+
+  var cellSize = 20;
+  var numYears = 11;
+
   var margin = {top: 30, right: 0, bottom: 30, left: 50},
       width = 1000 - margin.left - margin.right,
-      height = 300 - margin.top - margin.bottom;
+      height = cellSize * numYears - 10;
+
+
 
   var div = d3.select('.chart').append("div")
     .attr("class", "tooltip")
@@ -13,7 +21,7 @@ d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/unis/data.js
 
   var formatTime = d3.timeFormat("%Y");
 
-  var states = d3.set(data.map(function(d) { return d.state; } )).values();
+
 
   var x = d3.scaleBand()
       .range([0, width]);
@@ -31,18 +39,21 @@ d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/unis/data.js
   //states = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA", "WI", "WV", "WY"]
   x.domain(states);
 
+  var color = d3.scaleQuantize()
+      .domain(d3.extent(data, function(d) { return d.tuition; }))
+      .range(["#bdb7d6", "#948DB3", "#605885", "#433B67"]);
 
   svg.selectAll("rect")
       .data(data)
       .enter().append("rect")
-      .attr('width', 20)
-      .attr('height', 20)
+      .attr('width', cellSize)
+      .attr('height', cellSize)
       .attr('x', function(d) { return x(d.state); })
-      .attr('y', function(d) { return y(d.year) - 20; })
+      //put the cells on top of the y increments to prevent x-axis labels overlapping
+      .attr('y', function(d) { return y(d.year) - cellSize; })
       //set colors based on tuition
-      .attr('fill', function(d) { return y(d.tuition); })
-      .attr('fill', "red")
-      .style("stroke", "blue")
+      .attr('fill', function(d) { return color(d.tuition); })
+      .style("stroke", "#d6cdb7")
       // .on("mouseover", function(d) {
       //     div.transition()
       //      .duration(200)
