@@ -1,0 +1,12 @@
+/*http://www.famfamfam.com/lab/icons/flags/*/
+
+body {
+  text-align: center;
+  background-image: url("https://www.ashlynnpai.com/assets/nasa-min.jpg");
+  background-size: cover;
+}
+
+.chart {
+  margin-top: 100px;
+  background: rgba(0, 0, 0, 0.7);
+}

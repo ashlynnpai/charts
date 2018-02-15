@@ -7,7 +7,7 @@ d3.json("https://raw.githubusercontent.com/DealPete/forceDirected/master/countri
         links = graph.links;
 
     var width = 1000,
-        height = 600;
+        height = 1000;
 
     var svg = d3.select(".chart").append("svg")
         .attr("width", width)
@@ -16,7 +16,7 @@ d3.json("https://raw.githubusercontent.com/DealPete/forceDirected/master/countri
 
     var simulation = d3.forceSimulation()
         .nodes(nodes)
-        .force("charge_force", d3.forceManyBody())
+        .force("charge_force", d3.forceManyBody().strength(-15))
         .force("center_force", d3.forceCenter(width / 2, height / 2))
         .force("link", d3.forceLink(links).distance(10));
 
@@ -27,19 +27,14 @@ d3.json("https://raw.githubusercontent.com/DealPete/forceDirected/master/countri
         .enter()
         .append("image")
         .attr("xlink:href", function(d) { return `https://www.ashlynnpai.com/assets/flagspng/${d.code}.png` })
-        .attr("width", 30);
-
-
-// node.each(function(d) {
-//   this.classList.add("flag", "flag-" + d.code);
-// });
+        .attr("width", 20);
 
     var link = svg.append("g")
         .attr("class", "links")
         .selectAll("line")
         .data(links)
         .enter().append("line")
-        .attr("stroke", "black")
+        .attr("stroke", "#7D7D7D")
         .attr("stroke-width", 1);
 
     simulation.on("tick", function() {
