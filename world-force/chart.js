@@ -20,6 +20,10 @@ d3.json("https://raw.githubusercontent.com/DealPete/forceDirected/master/countri
         .force("center_force", d3.forceCenter(width / 2, height / 2))
         .force("link", d3.forceLink(links).distance(10));
 
+    var div = d3.select('.chart').append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
     var node = svg.append("g")
         .attr("class", "nodes")
         .selectAll("image")
@@ -27,7 +31,20 @@ d3.json("https://raw.githubusercontent.com/DealPete/forceDirected/master/countri
         .enter()
         .append("image")
         .attr("xlink:href", function(d) { return `https://www.ashlynnpai.com/assets/flagspng/${d.code}.png` })
-        .attr("width", 20);
+        .attr("width", 20)
+        .on("mouseover", function(d) {
+            div.transition()
+                .duration(200)
+                .style("opacity", .9);
+             div.html(d.country)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+        })
+       .on("mouseout", function(d) {
+           div.transition()
+              .duration(500)
+              .style("opacity", 0);
+       });;
 
     var link = svg.append("g")
         .attr("class", "links")
