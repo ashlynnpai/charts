@@ -1,97 +1,53 @@
-//data from https://trends.collegeboard.org/college-pricing/figures-tables/tuition-fees-flagship-universities-over-time
-//heat map showing tuition increases over ten years 2017 adjusted dollars
+//http://www.puzzlr.org/force-directed-graph-minimal-working-example/
 
-d3.json("https://raw.githubusercontent.com/ashlynnpai/charts/master/tuition-heatmap/data.json", function(response) {
-    var data = response;
 
-//set up chart dimensions
-    const cellSize = 20;
-    const numYears = 11;
-    const margin = {top: 30, right: 0, bottom: 30, left: 50},
-        width = 1000 - margin.left - margin.right,
-        height = cellSize * numYears - 10;
-    var x = d3.scaleBand()
-        .range([0, width]);
-    var y = d3.scaleTime()
-        .range([height, 0]);
+d3.json("https://raw.githubusercontent.com/DealPete/forceDirected/master/countries.json", function(graph) {
 
-    const svg = d3.select(".chart").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    var nodes = graph.nodes,
+        links = graph.links;
 
-    //convert time to and from string
-    var parseTime = d3.timeParse("%Y");
-    var formatTime = d3.timeFormat("%Y");
-    const years = data.map((d) => {parseTime(d.year)});
+    var width = 1000,
+        height = 600;
 
-    //set the values of x and y axes
-    const states = d3.set(data.map((d) => {return d.state})).values();
-    y.domain(d3.extent(data, d => d.year));
-    x.domain(states);
+    var svg = d3.select(".chart").append("svg")
+        .attr("width", width)
+        .attr("height", height);
 
-    //takes the range of tuition values and divides by the number of colors
-    //assigns a color for each range of values
-    var color = d3.scaleQuantize()
-    .domain(d3.extent(data, d => d.tuition))
-    .range(["#bdb7d6", "#948DB3", "#605885", "#433B67"]);
 
-    //draw the chart
-    svg.selectAll("rect")
-        .data(data)
-        .enter().append("rect")
-        .attr('width', cellSize)
-        .attr('height', cellSize)
-        .attr('x', d => x(d.state))
-        //put the cells on top of the y increments to prevent x-axis labels overlapping
-        .attr('y', d => y(d.year) - cellSize)
-        //set colors based on tuition
-        .attr('fill', d => color(d.tuition))
-        .style("stroke", "#d6cdb7")
-        //tooltips
-        .on("mouseover", function(d) {
-            div.transition()
-            .duration(200)
-            .style("opacity", .9);
-            div.html(d.uni + "<br/>$" + d.tuition)
-            .style("left", (d3.event.pageX) + "px")
-            .style("top", (d3.event.pageY - 28) + "px");
-        })
-        .on("mouseout", function(d) {
-            div.transition()
-            .duration(500)
-            .style("opacity", 0)
-        });
+    var simulation = d3.forceSimulation()
+        .nodes(nodes)
+        .force("charge_force", d3.forceManyBody())
+        .force("center_force", d3.forceCenter(width / 2, height / 2))
+        .force("link", d3.forceLink(links).distance(10));
 
-    //draws the axes
-    var xAxis = d3.axisBottom(x);
-    var yAxis = d3.axisLeft(y)
-        .tickFormat(d3.timeFormat("%Y"));
+    var node = svg.append("g")
+        .attr("class", "nodes")
+        .selectAll("image")
+        .data(nodes)
+        .enter()
+        .append("image")
+        .attr("xlink:href", function(d) { return `https://www.ashlynnpai.com/assets/flagspng/${d.code}.png` })
+        .attr("width", 30);
 
-    svg.append('g')
-        .classed('x axis', true)
-        .attr('transform', 'translate(0,' + height + ')')
-        .call(xAxis);
 
-    svg.append('g')
-        .classed('y axis', true)
-        .call(yAxis);
+// node.each(function(d) {
+//   this.classList.add("flag", "flag-" + d.code);
+// });
 
-    //draws the tooltips
-    var div = d3.select(".chart").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
+    var link = svg.append("g")
+        .attr("class", "links")
+        .selectAll("line")
+        .data(links)
+        .enter().append("line")
+        .attr("stroke", "black")
+        .attr("stroke-width", 1);
 
-    //make the legend showing tuition ranges for heat map colors
-    var tuition = d3.set(data.map((d) => {return d.tuition})).values();
-    tuition.sort(function(a,b){return a - b})
-    var q1 = d3.quantile(tuition, .25);
-    var q2 = d3.quantile(tuition, .5);
-    var q3 = d3.quantile(tuition, .75);
-    var q4 = d3.quantile(tuition, 1);
-    d3.select("#q1").node().innerHTML = "$0 - $" + q1;
-    d3.select("#q2").node().innerHTML = "$" + q1 + " - $" + q2 ;
-    d3.select("#q3").node().innerHTML = "$" + q2 + " - $" + q3 ;
-    d3.select("#q4").node().innerHTML = "$" + q3 + " - $" + q4 ;
+    simulation.on("tick", function() {
+        node.attr("x", function(d) {return d.x;})
+        .attr("y", function(d) {return d.y;});
+        link.attr("x1", function(d) {return d.source.x;})
+        .attr("y1", function(d) {return d.source.y;})
+        .attr("x2", function(d) {return d.target.x;})
+        .attr("y2", function(d) {return d.target.y;});
+    });
 });
