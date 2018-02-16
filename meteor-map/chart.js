@@ -8,10 +8,12 @@ var map = new Datamap({
         highlightOnHover: false,
 
     },
-
-    // dataUrl: 'https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/meteorite-strike-data.json',
     fills: {
-        defaultFill: 'pink'
+        "huge": "#ff8b94",
+        "large": "#ffaaa5",
+        "medium": "#dcedc1",
+        "small": "#a8e6cf",
+        "defaultFill": "#ffd3b6",
     },
     data: {
     }
@@ -26,23 +28,44 @@ d3.json("https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/mas
     for (i=0; i<response.features.length; i++) {
         try {
             let coords = response.features[i].geometry.coordinates;
-            meteor["latitude"] = coords[0];
-            meteor["longitude"] = coords[1];
-            meteor["radius"] = 10;
             let props = response.features[i].properties;
-            meteor["name"] = props.name;
-            meteor["year"] = props.year;
-            arr.push(meteor);
+            var rad = 0;
+            var size = "";
+            if (props.mass > 100000) {
+                rad = 30;
+                size = "huge";
+            }
+            else if (props.mass > 50000) {
+                rad = 15;
+                size = "large";
+            }
+            else if (props.mass > 10000) {
+                rad = 10;
+                size = "medium";
+            }
+            else {
+                rad = 3;
+                size = "small";
+            }
+            arr.push({"latitude": coords[1], "longitude": coords[0], "radius": rad,
+                     "name": props.name, "year": props.year, "fillkey": size})
         }
         catch(error) {
             console.log(i);
         }
     }
     map.bubbles(arr, {
+       fills: {
+            "huge": "#ff8b94",
+            "large": "#ffaaa5",
+            "medium": "#dcedc1",
+            "small": "#a8e6cf",
+            "defaultFill": "#ffd3b6",
+        },
         popupTemplate: function (geo, data) {
-                return ['<div>' +  data.name,
-                '<br/>Year: ' +  data.year + '',
-                '</div>'].join('');
+            return ['<div>' +  data.name,
+            '<br/>Year: ' +  data.year + '',
+            '</div>'].join('');
         }
     });
 });
