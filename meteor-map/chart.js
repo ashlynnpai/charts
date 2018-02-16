@@ -32,40 +32,42 @@ d3.json("https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/mas
             var rad = 0;
             var size = "";
             if (props.mass > 100000) {
-                rad = 30;
-                size = "huge";
+              rad = 30;
+              size = "huge";
             }
             else if (props.mass > 50000) {
-                rad = 15;
-                size = "large";
+              rad = 15;
+              size = "large";
             }
             else if (props.mass > 10000) {
-                rad = 10;
-                size = "medium";
+              rad = 10;
+              size = "medium";
             }
             else {
-                rad = 3;
-                size = "small";
+              rad = 3;
+              size = "small";
             }
             arr.push({"latitude": coords[1], "longitude": coords[0], "radius": rad,
-                     "name": props.name, "year": props.year, "fillkey": size})
+                     "name": props.name, "year": props.year, "fillkey": size, "mass": props.mass})
         }
         catch(error) {
             console.log(i);
         }
     }
+    //var formatTime = d3.time.format("%Y");
     map.bubbles(arr, {
        fills: {
-            "huge": "#ff8b94",
-            "large": "#ffaaa5",
-            "medium": "#dcedc1",
-            "small": "#a8e6cf",
-            "defaultFill": "#ffd3b6",
+        "huge": "#ff8b94",
+        "large": "#ffaaa5",
+        "medium": "#dcedc1",
+        "small": "#a8e6cf",
+        "defaultFill": "#ffd3b6",
         },
         popupTemplate: function (geo, data) {
-            return ['<div>' +  data.name,
-            '<br/>Year: ' +  data.year + '',
-            '</div>'].join('');
+                return ['<div>' +  data.name,
+                '<br/>Year: ' +  data.year + '',
+                '<br/>Mass: ' +  data.mass + '',
+                '</div>'].join('');
         }
     });
 });
